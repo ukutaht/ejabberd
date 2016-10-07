@@ -912,7 +912,7 @@ default_db(Host, Module) ->
     end.
 
 get_modules_with_options() ->
-    {ok, Mods} = application:get_key(ejabberd, modules),
+    Mods    = [Name || {Name, _Details} <- code:all_loaded()],
     ExtMods = [Name || {Name, _Details} <- ext_mod:installed()],
     AllMods = [?MODULE|ExtMods++Mods],
     init_module_db_table(AllMods),
