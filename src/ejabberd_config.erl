@@ -912,9 +912,10 @@ default_db(Host, Module) ->
     end.
 
 get_modules_with_options() ->
-    Mods    = [Name || {Name, _Details} <- code:all_loaded()],
+    LoadedMods    = [Name || {Name, _Details} <- code:all_loaded()],
+    {ok, AppMods} = application:get_key(ejabberd, modules),
     ExtMods = [Name || {Name, _Details} <- ext_mod:installed()],
-    AllMods = [?MODULE|ExtMods++Mods],
+    AllMods = [?MODULE|ExtMods++AppMods++LoadedMods],
     init_module_db_table(AllMods),
     lists:foldl(
       fun(Mod, D) ->
